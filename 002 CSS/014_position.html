@@ -1,0 +1,45 @@
+<!-- positions -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Positions</title>
+    <style>
+        *{
+            background-color: rgb(157, 162, 164);
+        }
+        p{
+            background-color: aqua;
+        }
+        div p{
+            position: relative; /*this is like margin ,where paosititon are defined using left, right, top and botton */
+            left : 5vw;
+            top: 100px;
+            background-color: green;
+        }
+        .text{
+            background-color: red;
+            position: absolute; /* its change from origin */
+            top: 1px;
+        
+        }
+    </style>
+</head>
+<body>
+    <h1>Positions</h1>
+    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quae, ratione.</p>
+    <div>
+        <p>
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Animi, deleniti 
+            enim! Magni quisquam quae cum eaque mollitia maxime repellat aut.
+        </p>
+        <p class="text">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quod, atque.
+        </p>
+    </div>
+
+    
+</body>
+</html>

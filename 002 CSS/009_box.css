@@ -1,0 +1,35 @@
+body {
+    height: 600px;
+}
+
+.parent {
+    /* width: 800px; */
+    height: 50%;
+    background-color: crimson;
+    
+}
+
+.parent :nth-child(1) {
+    background-color: aquamarine;
+    width: 50%;
+    height: 50%; /* height of child will be pre declare before child height delcare */
+
+    padding: 10px;
+    border: 10px solid;
+    margin : 5px;
+    /* margin: 10px 10px 10px 10px; */
+    /* margin-block: 10px; */ /* topdown */
+    /* margin-inline: 20px; */ /* left-right */
+    box-sizing: border-box;
+
+    /* overflow: scroll; */
+    /* word-break: break-all; */
+}
+
+.one-child {
+    width: 50%;
+}
+
+.two {
+    background-color: blueviolet;
+}

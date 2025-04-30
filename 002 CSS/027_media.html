@@ -1,0 +1,29 @@
+<!-- @media , it is two types screen and print -->
+<!-- print-color-adjust (for print background color)-->
+<!-- -webkit-print-color-adjust -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .container{
+            background-color: red;
+            height: 300px;
+            width: 400px;
+            border: 20px solid;
+            print-color-adjust: exact; /* it used to set by default background color on by default, for another browser */
+            -webkit-print-color-adjust : exact; /* for chorme */
+        }
+        @media print {
+            .container{
+                background-color: green;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container"></div>
+</body>
+</html>

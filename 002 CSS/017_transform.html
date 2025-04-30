@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transform</title>
+    <style>
+        .box{
+            background-color: lightcoral;
+            width: 100px;
+            height: 100px;
+            /* margin-top: 100px; it push the other content */
+            transform: translateY(100px); /* it does not push other content*/
+        }
+    </style>
+</head>
+<body>
+    <h1>Transform</h1>
+    <div class="box">
+        <p>hlw world</p>
+    </div>
+    <p>
+        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Libero similique dignissimos culpa nam inventore maiores.
+    </p>
+</body>
+</html>

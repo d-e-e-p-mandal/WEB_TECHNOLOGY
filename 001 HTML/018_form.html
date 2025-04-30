@@ -1,0 +1,90 @@
+<!-- Form -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Form</title>
+</head>
+<body>
+    <form action="">
+        <h1>Payment Form</h1>
+        <h2>Contact Information</h2>
+        <p>Name : <input type="text" name="name" placeholder="Enter your name " required></p>    <!--name tag is atribute, placeholder for write something, required is for nessary fill it-->
+    
+        <fieldset><!-- fieldset for grouping -->
+            <legend>Gender : </legend><!-- legend for givig name of group -->
+            <p>
+                Male <input type="radio" name="gender" id="Male"> Female <input type="radio" name="gender" id="Female"><!-- name will be same for all-->
+            </p> 
+        </fieldset>
+    
+        <p>Address : <textarea name="address" id="address" rows="5" cols="100"></textarea></p>
+    
+        <p>Email : <input type="email" name="email" id="email"></p>
+    
+        <p>Pincode : <input type="number" name="Pincode" id="Pincode"></p>
+        
+        <h2>Payment Information </h2>
+        <p>Card Type :
+            <select name="card_type" id="card">
+                <option value="rupay" selected>Rupay</option><!-- selected for set default-->
+                <option value="visa">Visa</option> 
+                <option value="master_card">Master Card</option>
+            </select>
+        </p>
+
+        <p>Card Number : <input type="number" name="card_number" id="card_number"></p>
+
+        <p>Expiry Date : <input type="date" name="Expiry" id="Expiry"></p>
+
+        <p>Cvv : <input type="password" name="cvv" id="cvv"></p>
+
+        <!-- Different from Paragraph -->
+        <div>
+            <input type="checkbox" name="" id="checkbox"> <label for="checkbox">Checkbox</label> <!-- label for touch anywhere of botton -->
+        </div>
+
+        <div>
+            <input type="reset" value="Reset">
+            <input type="submit" value="Pay Now"> 
+        </div>
+    </form>
+
+    <hr>
+
+    <h2>Another From</h2>
+    <!-- range -->
+    <form action="">
+        <div> 
+            <label for="volume">Volume : 0</label>
+            <input type="range" id="volume" name="volume" min="0" max="100" value="70"><!-- value is uesd to set default -->
+            <span id="volumeValue">100</span>
+        </div>
+        <div>
+            <label for="number">Enter number</label>
+            <input type="number" minlength="10" name="" id="number">
+        </div>
+    </form>
+    <!-- search -->
+     <form action="/">
+        <div>
+            <label for="search">search</label> <!-- for = "id name for which using level"-->
+            <input type="text" name="search" id="search"> <!-- name this is add after ?(auto) -->
+            <button>🔍</button>
+        </div>
+     </form>
+     <hr>
+    <!-- search on flipkart -->
+     <form action="https://www.flipkart.com/">
+        <div>
+            <input type="text" name="q" id="search">
+            <button type="submit">Search on flipkart</button>
+        </div>
+    </form>
+
+
+     
+    
+</body>
+</html>
