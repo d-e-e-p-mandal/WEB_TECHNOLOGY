@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Factorial Calculator</title>
+</head>
+<body>
+
+    <h2>Factorial Calculator</h2>
+
+    <label for="number">Enter a number:</label>
+    <input type="text" id="number" min="0">
+    <button onclick="calculateFactorial()">Calculate</button>
+
+    <p id="result"></p>
+
+    <script>
+        function calculateFactorial() {
+            let num = parseInt(document.getElementById("number").value);
+            let result = 1;
+
+            if (num < 0) {
+                document.getElementById("result").innerHTML = "Please enter a non-negative integer.";
+                return;
+            }
+
+            for (let i = 1; i <= num; i++) {
+                result *= i;
+            }
+
+            document.getElementById("result").innerText = "Factorial of " + num + " is " + result + ".";
+        }
+    </script>
+
+</body>
+</html>
