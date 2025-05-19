@@ -1,0 +1,35 @@
+<!-- Objecet -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Object</title>
+</head>
+<body>
+    <div>
+        <div class="st-details">
+            <p> Hlw world!</p>
+        </div>
+    </div>
+
+    <script>
+        const student = {
+            firstName : "Ankur",
+            lastName : "Moriya",
+            age : 21,
+            course : "MCA",
+
+            getDetails: function() {
+                return `
+                    <strong>Name : ${this.firstName} </strong>
+                ` 
+            }
+
+        };
+       // document.write(student.getDetails());
+        document.getElementsByClassName("st-details"[0]).innerHTML = document.write(student.getDetails());
+    </script>
+</body>
+</html>
+
