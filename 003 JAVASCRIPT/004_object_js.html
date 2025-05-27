@@ -8,7 +8,9 @@
 </head>
 <body>
     <div>
-        <div class="st-details">
+        <div class="st-details" style="background-color: rgb(249, 212, 212);">
+            <p> Hlw world!</p>
+            <p> Hlw world!</p>
             <p> Hlw world!</p>
         </div>
     </div>
@@ -27,8 +29,9 @@
             }
 
         };
-       // document.write(student.getDetails());
-        document.getElementsByClassName("st-details"[0]).innerHTML = document.write(student.getDetails());
+        document.getElementsByClassName("st-details")[0].innerHTML += student.getDetails();
+       // document.write(student.getDetails()); this write out side of the class
+        document.getElementsByClassName("st-details").innerHTML = document.write(student.getDetails());
     </script>
 </body>
 </html>

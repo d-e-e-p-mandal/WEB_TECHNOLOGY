@@ -23,11 +23,15 @@
                 return;
             }
 
-            for (let i = 1; i <= num; i++) {
+            for(let i = 1; i <= num; i++) {
                 result *= i;
             }
+            
+            if(!isNaN(num))
+                document.getElementById("result").innerText = "Factorial of " + num + " is " + result + ".";
+            else
+                alert("invalid input");
 
-            document.getElementById("result").innerText = "Factorial of " + num + " is " + result + ".";
         }
     </script>
 
