@@ -19,7 +19,6 @@ module.exports.saveRedirectUrl =(req,res,next)=>
   if(req.session.redirectUrl)
   {
     res.locals.redirectUrl = req.session.redirectUrl;
-    delete req.session.redirectUrl; // clear it after use
   }
   next();
 };
