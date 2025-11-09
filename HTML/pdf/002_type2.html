@@ -1,0 +1,66 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+<script>
+  const url = "resume.pdf";
+  const pdfjsLib = window['pdfjs-dist/build/pdf'];
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js";
+
+  let pdfDoc = null, pageNum = 1, scale = 1.2; // start slightly zoomed-in
+  const canvas = document.getElementById("the-canvas");
+  const ctx = canvas.getContext("2d");
+
+  function renderPage(num) {
+    pdfDoc.getPage(num).then(page => {
+      const viewport = page.getViewport({ scale });
+      
+      // ✅ High DPI scaling (for crisp text and images)
+      const outputScale = window.devicePixelRatio || 1;
+      const scaledViewport = page.getViewport({ scale: scale * outputScale });
+
+      canvas.width = scaledViewport.width;
+      canvas.height = scaledViewport.height;
+      canvas.style.width = viewport.width + "px";
+      canvas.style.height = viewport.height + "px";
+
+      const transform = outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
+
+      const renderContext = {
+        canvasContext: ctx,
+        transform,
+        viewport: scaledViewport
+      };
+
+      page.render(renderContext);
+      document.getElementById("page_num").textContent = num;
+    });
+  }
+
+  pdfjsLib.getDocument(url).promise.then(pdf => {
+    pdfDoc = pdf;
+    document.getElementById("page_count").textContent = pdf.numPages;
+    renderPage(pageNum);
+  }).catch(err => {
+    alert("❌ Error loading PDF: " + err.message);
+  });
+
+  // Navigation and controls
+  document.getElementById("prev").onclick = () => {
+    if (pageNum <= 1) return;
+    renderPage(--pageNum);
+  };
+  document.getElementById("next").onclick = () => {
+    if (pageNum >= pdfDoc.numPages) return;
+    renderPage(++pageNum);
+  };
+  document.getElementById("zoom_in").onclick = () => {
+    scale += 0.2; renderPage(pageNum);
+  };
+  document.getElementById("zoom_out").onclick = () => {
+    scale = Math.max(0.5, scale - 0.2); renderPage(pageNum);
+  };
+  document.getElementById("go").onclick = () => {
+    const num = parseInt(document.getElementById("page_input").value);
+    if (num >= 1 && num <= pdfDoc.numPages) renderPage(pageNum = num);
+    else alert("Invalid page number");
+  };
+</script>

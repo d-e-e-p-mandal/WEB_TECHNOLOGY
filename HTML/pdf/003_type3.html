@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resume Viewer</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f3f3f3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    #toolbar {
+      background: #222;
+      color: #fff;
+      width: 100%;
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    button {
+      background: #007bff;
+      border: none;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    input[type="number"] {
+      width: 70px;
+      padding: 5px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+
+    #pdf-container {
+      flex: 1;
+      overflow: auto;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      background: #fff;
+    }
+
+    canvas {
+      display: block;
+      margin: 10px auto;
+      background: #fff;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div id="toolbar">
+    <button id="prev">⏮ Prev</button>
+    <span>Page <span id="page_num">1</span> / <span id="page_count">0</span></span>
+    <input type="number" id="page_input" placeholder="Go to" min="1" />
+    <button id="go">Go</button>
+    <button id="next">Next ⏭</button>
+    <button id="zoom_in">🔍 +</button>
+    <button id="zoom_out">🔍 −</button>
+    <button id="download">⬇️ Download</button>
+  </div>
+
+  <div id="pdf-container">
+    <canvas id="the-canvas"></canvas>
+  </div>
+
+  <script>
+    const url = "resume.pdf";
+    const pdfjsLib = window['pdfjs-dist/build/pdf'];
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js";
+
+    let pdfDoc = null,
+        pageNum = 1,
+        scale = 1.0,
+        canvas = document.getElementById("the-canvas"),
+        ctx = canvas.getContext("2d");
+
+    // ✅ Dynamically calculate scale to fit window width
+    function fitToWidth(page) {
+      const containerWidth = document.getElementById("pdf-container").clientWidth;
+      const unscaledViewport = page.getViewport({ scale: 1 });
+      return containerWidth / unscaledViewport.width;
+    }
+
+    function renderPage(num) {
+      pdfDoc.getPage(num).then(page => {
+        const fitScale = fitToWidth(page);
+        const viewport = page.getViewport({ scale: scale * fitScale });
+        const outputScale = window.devicePixelRatio || 1;
+
+        canvas.width = viewport.width * outputScale;
+        canvas.height = viewport.height * outputScale;
+        canvas.style.width = viewport.width + "px";
+        canvas.style.height = viewport.height + "px";
+
+        const transform = outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
+        const renderContext = { canvasContext: ctx, transform, viewport };
+
+        page.render(renderContext);
+        document.getElementById("page_num").textContent = num;
+      });
+    }
+
+    pdfjsLib.getDocument(url).promise.then(pdf => {
+      pdfDoc = pdf;
+      document.getElementById("page_count").textContent = pdf.numPages;
+      renderPage(pageNum);
+    }).catch(err => alert("❌ Error loading PDF: " + err.message));
+
+    // 🔹 Controls
+    document.getElementById("prev").onclick = () => {
+      if (pageNum <= 1) return;
+      renderPage(--pageNum);
+    };
+    document.getElementById("next").onclick = () => {
+      if (pageNum >= pdfDoc.numPages) return;
+      renderPage(++pageNum);
+    };
+    document.getElementById("zoom_in").onclick = () => {
+      scale += 0.2; renderPage(pageNum);
+    };
+    document.getElementById("zoom_out").onclick = () => {
+      scale = Math.max(0.6, scale - 0.2); renderPage(pageNum);
+    };
+    document.getElementById("go").onclick = () => {
+      const num = parseInt(document.getElementById("page_input").value);
+      if (num >= 1 && num <= pdfDoc.numPages) renderPage(pageNum = num);
+      else alert("Invalid page number");
+    };
+    document.getElementById("download").onclick = () => {
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "resume.pdf";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    };
+
+    // ✅ Auto re-render when resizing window
+    window.addEventListener("resize", () => renderPage(pageNum));
+  </script>
+</body>
+</html>

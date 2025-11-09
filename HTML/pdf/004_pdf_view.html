@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resume Viewer</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f4f4f4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #toolbar {
+      background: #222;
+      color: #fff;
+      width: 100%;
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    button {
+      background: #007bff;
+      border: none;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    input[type="number"] {
+      width: 70px;
+      padding: 5px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+
+    #pdf-container {
+      margin-top: 15px;
+      background: #fff;
+      padding: 10px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.15);
+      display: flex;
+      justify-content: center;
+      overflow: auto;
+      max-width: 95vw;
+    }
+
+    canvas {
+      display: block;
+      border-radius: 6px;
+      background: #fff;
+      max-width: 100%;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  <div id="toolbar">
+    <button id="prev">⏮ Prev</button>
+    <span>Page <span id="page_num">1</span> / <span id="page_count">0</span></span>
+    <input type="number" id="page_input" placeholder="Go to" min="1" />
+    <button id="go">Go</button>
+    <button id="next">Next ⏭</button>
+    <button id="zoom_in">🔍 +</button>
+    <button id="zoom_out">🔍 −</button>
+    <button id="download">⬇️ Download</button>
+  </div>
+
+  <div id="pdf-container">
+    <canvas id="the-canvas"></canvas>
+  </div>
+
+  <script>
+    const url = "resume.pdf";
+    const pdfjsLib = window['pdfjs-dist/build/pdf'];
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js";
+
+    let pdfDoc = null,
+        pageNum = 1,
+        scale = 1.4,
+        canvas = document.getElementById("the-canvas"),
+        ctx = canvas.getContext("2d");
+
+    function renderPage(num) {
+      pdfDoc.getPage(num).then(page => {
+        const viewport = page.getViewport({ scale });
+        const outputScale = window.devicePixelRatio || 1;
+        const scaledViewport = page.getViewport({ scale: scale * outputScale });
+
+        canvas.width = scaledViewport.width;
+        canvas.height = scaledViewport.height;
+        canvas.style.width = viewport.width + "px";
+        canvas.style.height = viewport.height + "px";
+
+        const transform = outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
+
+        const renderContext = {
+          canvasContext: ctx,
+          transform,
+          viewport: scaledViewport
+        };
+
+        page.render(renderContext);
+        document.getElementById("page_num").textContent = num;
+      });
+    }
+
+    pdfjsLib.getDocument(url).promise.then(pdf => {
+      pdfDoc = pdf;
+      document.getElementById("page_count").textContent = pdf.numPages;
+      renderPage(pageNum);
+    }).catch(err => {
+      alert("❌ Error loading PDF: " + err.message);
+    });
+
+    // Navigation controls
+    document.getElementById("prev").onclick = () => {
+      if (pageNum <= 1) return;
+      renderPage(--pageNum);
+    };
+
+    document.getElementById("next").onclick = () => {
+      if (pageNum >= pdfDoc.numPages) return;
+      renderPage(++pageNum);
+    };
+
+    document.getElementById("zoom_in").onclick = () => {
+      scale += 0.2;
+      renderPage(pageNum);
+    };
+
+    document.getElementById("zoom_out").onclick = () => {
+      scale = Math.max(0.6, scale - 0.2);
+      renderPage(pageNum);
+    };
+
+    document.getElementById("go").onclick = () => {
+      const num = parseInt(document.getElementById("page_input").value);
+      if (num >= 1 && num <= pdfDoc.numPages) renderPage(pageNum = num);
+      else alert("Invalid page number");
+    };
+
+    // ✅ Working download button
+    document.getElementById("download").onclick = () => {
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "resume.pdf";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Resume Viewer (Working)</title>
+  <style>
+    body {
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+      background: #f6f8fa;
+    }
+    header {
+      background: #0078d7;
+      color: white;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    header button, header input {
+      border: none;
+      border-radius: 5px;
+      padding: 5px 8px;
+      font-size: 14px;
+    }
+    header button {
+      background: white;
+      color: #0078d7;
+      cursor: pointer;
+    }
+    #the-canvas {
+      margin: auto;
+      background: white;
+      border: 1px solid #ccc;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      max-width: 100%;
+    }
+    #viewer {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: auto;
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <button id="prev">Prev</button>
+    <button id="next">Next</button>
+    <span>Page: <span id="page_num">1</span>/<span id="page_count">0</span></span>
+    <input type="number" id="page_input" min="1" style="width:60px" placeholder="Page">
+    <button id="go">Go</button>
+    <button id="zoom_in">Zoom +</button>
+    <button id="zoom_out">Zoom -</button>
+  </header>
+  <div id="viewer">
+    <canvas id="the-canvas"></canvas>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+  <script>
+    const url = "resume.pdf";
+    const pdfjsLib = window['pdfjs-dist/build/pdf'];
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js";
+
+    let pdfDoc = null, pageNum = 1, scale = 1.0;
+    const canvas = document.getElementById("the-canvas");
+    const ctx = canvas.getContext("2d");
+
+    function renderPage(num) {
+      pdfDoc.getPage(num).then(page => {
+        const viewport = page.getViewport({ scale });
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+        const renderContext = { canvasContext: ctx, viewport };
+        page.render(renderContext);
+        document.getElementById("page_num").textContent = num;
+      });
+    }
+
+    pdfjsLib.getDocument(url).promise.then(pdf => {
+      pdfDoc = pdf;
+      document.getElementById("page_count").textContent = pdf.numPages;
+      renderPage(pageNum);
+    }).catch(err => {
+      alert("❌ Error loading PDF: " + err.message);
+    });
+
+    document.getElementById("prev").onclick = () => {
+      if (pageNum <= 1) return;
+      renderPage(--pageNum);
+    };
+    document.getElementById("next").onclick = () => {
+      if (pageNum >= pdfDoc.numPages) return;
+      renderPage(++pageNum);
+    };
+    document.getElementById("zoom_in").onclick = () => { scale += 0.2; renderPage(pageNum); };
+    document.getElementById("zoom_out").onclick = () => { scale = Math.max(0.5, scale - 0.2); renderPage(pageNum); };
+    document.getElementById("go").onclick = () => {
+      const num = parseInt(document.getElementById("page_input").value);
+      if (num >= 1 && num <= pdfDoc.numPages) renderPage(pageNum = num);
+      else alert("Invalid page number");
+    };
+  </script>
+</body>
+</html>

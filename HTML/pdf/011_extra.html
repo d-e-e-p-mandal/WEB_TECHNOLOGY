@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resume Chrome PDF Viewer</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #dfe9f3, #ffffff);
+      height: 100vh;
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .card {
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+      padding: 30px;
+      text-align: center;
+      width: 350px;
+    }
+    h1 {
+      margin-bottom: 20px;
+      color: #111827;
+    }
+    button {
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 10px;
+      transition: all 0.25s ease;
+    }
+    button:hover {
+      background: #1d4ed8;
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>📄 Resume PDF Viewer</h1>
+    <p>Click below to open your resume in Chrome’s built-in PDF viewer.</p>
+    <button onclick="openInChrome()">👁️ Show PDF</button>
+    <button onclick="downloadPDF()">⬇️ Download PDF</button>
+  </div>
+
+  <script>
+    function openInChrome() {
+      // Open the PDF file directly — Chrome will open it in its PDF viewer
+      window.open("resume.pdf", "_blank");
+    }
+
+    function downloadPDF() {
+      const a = document.createElement("a");
+      a.href = "resume.pdf";
+      a.download = "resume.pdf";
+      a.click();
+    }
+  </script>
+</body>
+</html>
