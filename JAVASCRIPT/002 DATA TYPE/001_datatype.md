@@ -13,11 +13,11 @@
 
 const declares a block-scoped variable with a constant reference.
 
-1. **Scope:** **Block Scope**. A const variable is only accessible within the block ({ ... }) in which it is defined.
-2. **Reassignment:** **Not allowed**. A const variable cannot be reassigned a new value after its initial assignment. This will throw a TypeError.
-3. **Initialization:** **Mandatory**. A const variable must be initialized at the time of its declaration. Failure to do so results in a SyntaxError.
-4. **Hoisting:** const variables are hoisted to the top of their block but are not initialized. They are in a "Temporal Dead Zone" (TDZ) from the start of the block until the declaration is encountered. Accessing a const variable before its declaration results in a ReferenceError.
-5. **Mutability:** const only ensures the variable's reference is immutable, not the value it points to. If a const variable holds an object or an array, the properties or elements of that object/array can be modified.
+1. **`Scope`:** **`Block Scope`**. A const variable is only accessible within the block ({ ... }) in which it is defined.
+2. **`Reassignment`:** **Not allowed**. A const variable cannot be reassigned a new value after its initial assignment. This will throw a TypeError.
+3. **`Initialization`:** **Mandatory**. A const variable must be initialized at the time of its declaration. Failure to do so results in a SyntaxError.
+4. **`Hoisting`:** const variables are hoisted to the top of their block but are not initialized. They are in a "Temporal Dead Zone" (TDZ) from the start of the block until the declaration is encountered. Accessing a const variable before its declaration results in a ReferenceError.
+5. **`Mutability`:** const only ensures the variable's reference is immutable, not the value it points to. If a const variable holds an object or an array, the properties or elements of that object/array can be modified.
 
 **Example:**
 ```JS
